@@ -37,15 +37,7 @@ git add tasks.json "$LOGFILE"*
 if ! git diff-index --quiet HEAD --; then
     commit_msg="Auto-sync: tasks update on $(date '+%Y-%m-%d %H:%M:%S')"
     git commit -m "$commit_msg" || { echo "Failed to commit changes"; exit 1; }
-
-    # After pushing, clear the active log file to avoid outstanding changes.
-    if git push origin main; then
-        echo "Push succeeded, clearing active log." 
-        > "$LOGFILE"
-    else
-        echo "Failed to push changes."
-        exit 1
-    fi
+    git push origin main || { echo "Failed to push changes"; exit 1; }
 fi
 
 exit 0
