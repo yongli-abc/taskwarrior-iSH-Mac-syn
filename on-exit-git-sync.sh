@@ -1,5 +1,13 @@
 #!/bin/sh
 # Determine the OS type.
+
+# Read JSON input from Taskwarrior on exit (added/modified tasks)
+CHANGES=$(cat)
+if [ -z "$CHANGES" ]; then
+  # No task changes detected – exit without syncing.
+  exit 0
+fi
+
 OS=$(uname)
 if [ "$OS" = "Darwin" ]; then
     SUFFIX="mac"
