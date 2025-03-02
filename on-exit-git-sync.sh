@@ -1,5 +1,16 @@
 #!/bin/sh
-LOGFILE="$HOME/taskwarrior-sync-data/taskhook.log"
+# Determine the OS type.
+OS=$(uname)
+if [ "$OS" = "Darwin" ]; then
+    SUFFIX="mac"
+elif [ "$OS" = "Linux" ]; then
+    SUFFIX="iSH"
+else
+    SUFFIX="unknown"
+fi
+
+# Define the log file with OS suffix.
+LOGFILE="$HOME/taskwarrior-sync-data/taskhook-${SUFFIX}.log"
 MAX_LOG_SIZE=1048576  # 1 MB
 if [ -f "$LOGFILE" ]; then
     filesize=$(wc -c < "$LOGFILE")
@@ -21,7 +32,8 @@ task rc.hooks=off rc.json.array=on export > tasks.json
 git pull --no-rebase || { echo "Merge conflict or error during git pull"; exit 1; }
 
 # Stage and commit changes if any
-git add tasks.json
+git add tasks.json "$LOGFILE"*
+
 if ! git diff-index --quiet HEAD --; then
     commit_msg="Auto-sync: tasks update on $(date '+%Y-%m-%d %H:%M:%S')"
     git commit -m "$commit_msg" || { echo "Failed to commit changes"; exit 1; }

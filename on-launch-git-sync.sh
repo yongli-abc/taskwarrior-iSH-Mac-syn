@@ -1,5 +1,16 @@
 #!/bin/sh
-LOGFILE="$HOME/taskwarrior-sync-data/taskhook.log"
+# Determine the OS type.
+OS=$(uname)
+if [ "$OS" = "Darwin" ]; then
+    SUFFIX="mac"
+elif [ "$OS" = "Linux" ]; then
+    SUFFIX="iSH"
+else
+    SUFFIX="unknown"
+fi
+
+# Define the log file with OS suffix.
+LOGFILE="$HOME/taskwarrior-sync-data/taskhook-${SUFFIX}.log"
 MAX_LOG_SIZE=1048576  # 1 MB
 if [ -f "$LOGFILE" ]; then
     filesize=$(wc -c < "$LOGFILE")
