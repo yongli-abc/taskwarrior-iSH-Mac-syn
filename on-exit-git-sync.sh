@@ -35,7 +35,7 @@ echo "----- on-exit-git-sync triggered at $(date) -----"
 echo "\n"
 
 # Check last push timestamp.
-THRESHOLD_SECONDS=300   # 5 minutes
+THRESHOLD_SECONDS=660   # 11 minutes
 LAST_PUSH_FILE="$HOME/.task/last_push_time"
 [ ! -f "$LAST_PUSH_FILE" ] && echo 0 > "$LAST_PUSH_FILE"
 LAST_PUSH=$(cat "$LAST_PUSH_FILE")
@@ -46,7 +46,6 @@ if [ $((NOW - LAST_PUSH)) -lt $THRESHOLD_SECONDS ]; then
     exit 0
 fi
 
-# Proceed with sync only if it's been at least 5 minutes since the last push.
 cd ~/taskwarrior-sync-data || { echo "Failed to cd to repo directory"; exit 1; }
 
 # Pull latest changes from remote.

@@ -13,7 +13,7 @@ fi
 LOGFILE="$HOME/taskwarrior-sync-data/taskhook-${SUFFIX}.log"
 MAX_LOG_SIZE=1048576  # 1 MB
 LAST_PULL_FILE="$HOME/.task/last_pull_time"
-THRESHOLD_SECONDS=300   # 5 minutes
+THRESHOLD_SECONDS=660   # 11 minutes
 
 # Rotate log if it exceeds max size.
 if [ -f "$LOGFILE" ]; then
@@ -47,7 +47,7 @@ if [ $((NOW - LAST_PULL)) -ge $THRESHOLD_SECONDS ]; then
         exit 1
     fi
 else
-    echo "Skipping git pull: Last pull was less than 5 minutes ago."
+    echo "Skipping git pull: Last pull was less than 11 minutes ago."
 fi
 
 exit 0
