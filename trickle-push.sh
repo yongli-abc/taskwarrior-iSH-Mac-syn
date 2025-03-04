@@ -36,7 +36,7 @@ git add tasks.json "$HOME/taskwarrior-sync-data/trickle-${SUFFIX}.log"*
 
 # Commit changes if there are any.
 if ! git diff-index --quiet HEAD --; then
-    commit_msg="Manual push: tasks update on $(date '+%Y-%m-%d %H:%M:%S')"
+    commit_msg="Trickle push: tasks update on $(date '+%Y-%m-%d %H:%M:%S')"
     if ! git commit -m "$commit_msg"; then
         echo "Failed to commit changes."
         exit 1
