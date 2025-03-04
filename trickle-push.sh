@@ -29,7 +29,9 @@ echo "\n"
 cd ~/taskwarrior-sync-data || { echo "Failed to cd to repo directory"; exit 1; }
 
 # Export tasks to JSON (disable hooks to prevent recursion)
-task rc.hooks=off rc.json.array=on export > tasks.json
+# Remove the 'urgency' field to prevent spurious changes.
+# 'urgency' field can be re-computed during import
+task rc.hooks=off rc.json.array=on export | jq 'map(del(.urgency))' > tasks.json
 
 # Stage tasks.json and any log files matching trickle-*
 git add tasks.json "$HOME/taskwarrior-sync-data/trickle-${SUFFIX}.log"*
