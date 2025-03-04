@@ -17,14 +17,17 @@ else
 fi
 
 # Define the log file (or trickle log) with OS suffix.
-LOGFILE="$HOME/taskwarrior-sync-data/taskhook-${SUFFIX}.log"
+LOGFILE="$HOME/taskwarrior-sync-data/${SUFFIX}.log"
 MAX_LOG_SIZE=1048576  # 1 MB
 
 # Rotate log if it exceeds max size.
+ARCHIVE_DIR="$HOME/taskwarrior-sync-data/archive"
+mkdir -p "$ARCHIVE_DIR"
+
 if [ -f "$LOGFILE" ]; then
     filesize=$(wc -c < "$LOGFILE")
     if [ "$filesize" -ge "$MAX_LOG_SIZE" ]; then
-        mv "$LOGFILE" "${LOGFILE}.$(date +%Y%m%d%H%M%S)"
+        mv "$LOGFILE" "$ARCHIVE_DIR/$(basename "$LOGFILE").$(date +%Y%m%d%H%M%S)"
     fi
 fi
 

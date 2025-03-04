@@ -10,14 +10,17 @@ else
 fi
 
 # Define the log file with OS suffix.
-LOGFILE="$HOME/taskwarrior-sync-data/trickle-${SUFFIX}.log"
+LOGFILE="$HOME/taskwarrior-sync-data/${SUFFIX}.log"
 MAX_LOG_SIZE=1048576  # 1 MB
 
 # Rotate log if it exceeds max size.
+ARCHIVE_DIR="$HOME/taskwarrior-sync-data/archive"
+mkdir -p "$ARCHIVE_DIR"
+
 if [ -f "$LOGFILE" ]; then
     filesize=$(wc -c < "$LOGFILE")
     if [ "$filesize" -ge "$MAX_LOG_SIZE" ]; then
-        mv "$LOGFILE" "${LOGFILE}.$(date +%Y%m%d%H%M%S)"
+        mv "$LOGFILE" "$ARCHIVE_DIR/$(basename "$LOGFILE").$(date +%Y%m%d%H%M%S)"
     fi
 fi
 
@@ -48,7 +51,7 @@ if git diff --quiet tasks.json; then
 fi
 
 # Stage tasks.json and any log files matching trickle-*
-git add tasks.json "$HOME/taskwarrior-sync-data/trickle-${SUFFIX}.log"*
+git add tasks.json "$HOME/taskwarrior-sync-data/${SUFFIX}.log"*
 
 # Create a commit message that includes the invocation type.
 commit_msg="Trickle push (${INVOCATION}): tasks update on $(date '+%Y-%m-%d %H:%M:%S')"

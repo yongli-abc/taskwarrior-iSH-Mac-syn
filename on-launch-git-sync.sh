@@ -10,18 +10,23 @@ else
 fi
 
 # Define the log file with OS suffix.
-LOGFILE="$HOME/taskwarrior-sync-data/taskhook-${SUFFIX}.log"
+LOGFILE="$HOME/taskwarrior-sync-data/${SUFFIX}.log"
 MAX_LOG_SIZE=1048576  # 1 MB
 LAST_PULL_FILE="$HOME/.task/last_pull_time"
 THRESHOLD_SECONDS=660   # 11 minutes
 
 # Rotate log if it exceeds max size.
+ARCHIVE_DIR="$HOME/taskwarrior-sync-data/archive"
+mkdir -p "$ARCHIVE_DIR"
+
 if [ -f "$LOGFILE" ]; then
     filesize=$(wc -c < "$LOGFILE")
     if [ "$filesize" -ge "$MAX_LOG_SIZE" ]; then
-        mv "$LOGFILE" "${LOGFILE}.$(date +%Y%m%d%H%M%S)"
+        mv "$LOGFILE" "$ARCHIVE_DIR/$(basename "$LOGFILE").$(date +%Y%m%d%H%M%S)"
     fi
 fi
+
+# Redirect all output (stdout and stderr) to the log file.
 exec >> "$LOGFILE" 2>&1
 echo "\n"
 echo "----- on-launch-git-sync triggered at $(date) -----"
