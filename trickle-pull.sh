@@ -21,9 +21,16 @@ if [ -f "$LOGFILE" ]; then
     fi
 fi
 
+# Determine invocation type.
+if [ "$CRON" = "1" ]; then
+    INVOCATION="cron"
+else
+    INVOCATION="manual"
+fi
+
 exec >> "$LOGFILE" 2>&1
 echo "\n"
-echo "----- Trickle-pull triggered at $(date) -----"
+echo "----- Trickle-pull by ${INVOCATION} triggered at $(date) -----"
 echo "\n"
 
 cd ~/taskwarrior-sync-data || { echo "Failed to cd to repo directory"; exit 1; }
