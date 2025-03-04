@@ -57,8 +57,10 @@ if ! git pull --no-rebase; then
     exit 1
 fi
 
-# Export tasks to JSON (disable hooks to prevent recursion).
-task rc.hooks=off rc.json.array=on export > tasks.json
+# Export tasks to JSON (disable hooks to prevent recursion)
+# Remove the 'urgency' field to prevent spurious changes.
+# 'urgency' field can be re-computed during import.
+task rc.hooks=off rc.json.array=on export | jq 'sort_by(.entry) | reverse | map(del(.urgency))' > tasks.json
 
 # Stage all changes (e.g. tasks.json, log files, etc.).
 git add -A
