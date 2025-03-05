@@ -38,7 +38,7 @@ echo "----- on-exit-git-sync triggered at $(date) -----"
 echo "\n"
 
 # Check last push timestamp.
-THRESHOLD_SECONDS=660   # 11 minutes
+THRESHOLD_SECONDS=900   # 15 minutes
 LAST_PUSH_FILE="$HOME/.task/last_push_time"
 [ ! -f "$LAST_PUSH_FILE" ] && echo 0 > "$LAST_PUSH_FILE"
 LAST_PUSH=$(cat "$LAST_PUSH_FILE")
